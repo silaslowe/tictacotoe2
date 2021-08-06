@@ -5,6 +5,7 @@ function App() {
   const [board, setboard] = useState(['', '', '', '', '', '', '', '', ''])
   const [player, setPlayer] = useState(true)
   const [message, setMessage] = useState('')
+  const [gameWinner, setGameWinner] = useState(false)
 
   const handleClick = (index) => {
     const updated = [...board]
@@ -22,58 +23,67 @@ function App() {
     setMessage('')
   }
 
+
+
   const winner = () => {
     setPlayer(!player)
-    player ? setMessage('Player 1 wins') : setMessage('Player 2 wins')
+    player ? setMessage('Player 2 wins') : setMessage('Player 1 wins')
   }
-const winCondition = () => {
-  if(board[0] !== '' && board[0] === board[1] && board[1] === board[2]) {
+
+  const reset = () => {
     setboard(['', '', '', '', '', '', '', '', ''])
     winner() 
     setPlayer(true)
+    setGameWinner(true)
+  }
+
+const winCondition = () => {
+  if(board[0] !== '' && board[0] === board[1] && board[1] === board[2]) {
+    reset()
+  }
+  if(board[0] !== '' && board[0] === board[3] && board[3] === board[6]) {
+    reset()
   }
   if(board[0] !== '' && board[0] === board[4] && board[4] === board[8]) {
-    setboard(['', '', '', '', '', '', '', '', ''])
-    winner()
-    setPlayer(true)
+    reset()
   }
   if(board[1] !== '' && board[1] === board[4] && board[4] === board[7]) {
-    setboard(['', '', '', '', '', '', '', '', ''])
-    winner()
-    setPlayer(true)
+    reset()
   }
   if(board[2] !== '' && board[2] === board[4] && board[4] === board[6]) {
-    setboard(['', '', '', '', '', '', '', '', ''])
-    winner()
-    setPlayer(true)
+    reset()
+  }
+  if(board[2] !== '' && board[2] === board[4] && board[4] === board[8]) {
+    reset()
   }
   if(board[3] !== '' && board[3] === board[4] && board[4] === board[5]) {
-    setboard(['', '', '', '', '', '', '', '', ''])
-    winner()
-    setPlayer(true)
+    reset()
   }
   if(board[6] !== '' && board[6] === board[7] && board[7] === board[8]) {
-    setboard(['', '', '', '', '', '', '', '', ''])
-    winner()
-    setPlayer(true)
+    reset()
   }
+  return
 }
 
 const computerPlay = () => {
   winCondition()
-  if(player === false) {
+  if(player === false && gameWinner === false) {
     const play = Math.floor(Math.random() * 8)
     if (board[play] === '') {
         handleClick(play)
         return
       } else {
-        winCondition()
         computerPlay()  
+        }
       }
     }
-  }
-  console.log(player)
-  computerPlay()
+  
+  useEffect(() => {
+    computerPlay()
+  }, [board])
+
+  winCondition()
+
   return (
     <div className='App'>
       <h1>Tic Tac Toe</h1>
