@@ -24,9 +24,9 @@ function App() {
 
   const winner = () => {
     setPlayer(!player)
-    player ? setMessage('Player 2 wins') : setMessage('Player 1 wins')
+    player ? setMessage('Player 1 wins') : setMessage('Player 2 wins')
   }
-
+const winCondition = () => {
   if(board[0] !== '' && board[0] === board[1] && board[1] === board[2]) {
     setboard(['', '', '', '', '', '', '', '', ''])
     winner() 
@@ -57,11 +57,23 @@ function App() {
     winner()
     setPlayer(true)
   }
+}
 
-  // useEffect(() => {
-  //     setPlayer(!player)
-  // }, [board])
-
+const computerPlay = () => {
+  winCondition()
+  if(player === false) {
+    const play = Math.floor(Math.random() * 8)
+    if (board[play] === '') {
+        handleClick(play)
+        return
+      } else {
+        winCondition()
+        computerPlay()  
+      }
+    }
+  }
+  console.log(player)
+  computerPlay()
   return (
     <div className='App'>
       <h1>Tic Tac Toe</h1>
